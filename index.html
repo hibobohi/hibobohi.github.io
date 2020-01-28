@@ -1,0 +1,252 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>The Manifest Fornell-Larcker criterion</title>
+<style>
+body {
+	margin: 2em;
+	text-align: left;
+	font: 120%/1.5 sans-serif;
+	color: black;
+}
+
+body > h1 {
+	margin-bottom: 1.3em;
+	text-indent: -1.7em;
+	text-transform: lowercase;
+	letter-spacing: -1px;
+	word-spacing: -.25em;
+	line-height: 1.3;
+}
+
+table tr:hover {
+	background-color: #ddd;
+}
+
+table {
+	 width: 100%;
+	 text-align: left;
+}
+
+td:first-child {
+ /* first column */
+	font-weight:bold;
+}
+
+#tabInput td:first-child {
+ /* first column */
+  text-align: right;
+	font-weight:bold;
+}
+
+#tabInput td:first-child + td {
+/* second column */
+ text-align: left;
+ font: 90%/1.5 sans-serif;
+ width: auto
+}
+
+#tabInput td:first-child + td + td {
+/* third column */
+width: 5em;
+text-align: left;
+}
+
+#tabInput td:first-child + td  + td + td{
+/* fourth column */
+width: 7em;
+align: right;
+}
+
+ td:first-child + td {
+width: 7em;
+text-align: center;
+}
+
+	input, output {
+		text-align: right;
+		position: relative;
+		display: block;
+		min-width: 5em;
+		width: 4em;
+		padding: .2em .5em .1em;
+		margin-top: -.1em;
+		border: thin solid rgba(0,0,0,.3);
+		background: hsla(0,0%,90%,.9);
+		color: #333;
+		text-shadow: 0 .05em 1px white;
+		font: 120% Consolas, Monaco, 'Andale Mono', 'Lucida Console', monospace;
+		box-shadow: .05em .1em .2em rgba(0,0,0,.4) inset;
+	}
+</style>
+</head>
+	<body onload="javascript:updateOutput()">
+<p style="font-weight:bold;">Assessing Distinctiveness in Multidimensional Instruments without Access to Raw Data – A Manifest Fornell-Larcker Criterion </p><p>
+
+This calculator helps estimating the distinctiveness between two dimensions of an already published multidimensional instrument using Cronbach's alpha and the manifest correlation between the two dimensions.
+The calculator computes both the manifest Fornell-Larcker criterion with double correction and the Fornell-Larcker criterion with single correction.
+
+When both criteria point into the same direction one can be sure that the result is correct. Only when the double-correction does indicate violations and the single correction does not, it is uncertain if there is any violation of distinctiveness between the two dimensions. </p>
+<fieldset>
+<form id="dvCalculator" oninput="updateOutput()">
+<legend style="font-weight:bold;">The Manifest Fornell-Larcker criterion calculator</legend>
+<fieldset>
+	<legend style="font-weight:bold;">Input</legend>
+	<table id="tabInput">
+	<tr><td>&alpha;<sub>X</sub></td><td>i.e. Cronbach's alpha for your first latent variable X</td>                                              <td><input id = "range1" type="range" min="0" max = "1.0" step="0.01" value=".85" oninput="updateVal1(this.value)"></td> <td><input id="val1" type=number min="0" max = "1.0" step=0.01    name="alphx" value=0.85 /></td></tr>
+	<tr><td>K<sub>X</sub></td>      <td>i.e. the number of items of your first latent variable X</td>   										   <td><input id = "range2" type="range" min="1" max = "20" step="1"     value="3" oninput="updateVal2(this.value);"></td>  <td><input id="val2" type=number min="0" max = "20"  step=1       name="kx"    value=3    /></td></tr>
+	<tr><td>&alpha;<sub>Y</sub></td><td>i.e. Cronbach's alpha for your second latent variable Y</td>                                             <td><input id = "range3" type="range" min="0" max = "1.0" step="0.01" value=".65" oninput="updateVal3(this.value);"></td><td><input id="val3" type=number min="0" max = "1.0" step="0.01"  name="alphy" value=0.65 /></td></tr>
+	<tr><td>K<sub>Y</sub></td>      <td>i.e. the number of items of your second latent variable Y</td>										   <td><input id = "range4" type="range" min="1" max = "20" step="1"     value="3" oninput="updateVal4(this.value);"></td>  <td><input id="val4" type=number min="0" max = "20"  step=1       name="ky"    value=3    /></td></tr>
+	<tr><td>r<sub>XY</sub></td>     <td>i.e. the Manifest correlation between the composite scores of your two variables (dimensions) X and Y</td>     <td><input id = "range5" type="range" min="0" max = "1.0" step="0.01" value=".46" oninput="updateVal5(this.value);"></td><td><input id="val5" type=number min="0" max = "1.0" step="0.01"  name="rxy"   value=0.46 /></td></tr>
+</table>
+</fieldset>
+<fieldset>
+	<legend style="font-weight:bold;">Output</legend>
+	<table>
+		<tr><td>Manifest Fornell-Larcker criterion with single correction</td><td id="FLsingleResult">-</td>
+		<tr><td>Manifest Fornell-Larcker criterion with double correction</td><td id="FLdoubleResult">-</td>
+	</table>
+</fieldset>
+<fieldset>
+	<legend style="font-weight:bold;">Intermediate steps</legend>
+	<table id="tableInter">
+	  <tr><td>&alpha;AVE<sub>X</sub></td><td><output     														  name="alphavex"     for="alphx kx alphy ky rxy">0.65</output></td></tr>
+		<tr><td>&radic;&alpha;AVE<sub>X</sub></td><td><output  													name="sqrtalpavex"  for="alphx kx alphy ky rxy">0.81</output></td></tr>
+		<tr><td>&alpha;AVE<sub>Y</sub></td><td><output     														  name="alphavey"     for="alphx kx alphy ky rxy">0.38</output></td></tr>
+		<tr><td>&radic;&alpha;AVE<sub>Y</sub></td><td><output  												  name="sqrtalpavey"  for="alphx kx alphy ky rxy">0.62</output></td></tr>
+		<tr><td>r<sub>XY</sub> with single correction using &alpha;<sub>min</sub></td><td><output name="rxysinglecor" for="alphx kx alphy ky rxy">0.57</output></td></tr>
+		<tr><td>r<sub>XY</sub> with double correction</td><td><output                             name="rxydoublecor" for="alphx kx alphy ky rxy">0.62</output></td></tr>
+	</table>
+</fieldset>
+</form>
+</fieldset>
+<p></p>
+<legend style="font-weight:bold;">An empirical example:</legend>
+ 
+Let’s suppose one is interested in the influence of the personality trait “openness” on political attitudes and voting behaviour. A likely choice to measure personality traits is to use the NEO-PI-R (Costa & McCrae, 1992). In this inventory, “openness” is made up of 6 facets (or sub traits), and each facet contains 8 items on the questionnaire. 
+<p></p>
+Inputting the values of the correlation matrix and Cronbach’s alpha provided by the test manual (Costa & McCrae, 1992) into this calculator reveals that not all of these six facets are distinct from each other (i.e. they violate the manifest Fornell-Larcker criterion both with single- and double correction). 
+<p></p>
+If one is not interested in using or interpreting these facets of “openness” separately (which is the case in most research endeavours), one can go on and use the NEO-PI-R.  However, if interpretation of these facets is vital to the research question at hand, it would be best to search for another measurement instrument. For instance, the IPIP-NEO-120 (Johnson, 2014) inventory offers to measure constructs similar to those assessed by the 30 facet scales in the NEO-PI-R. These items are not only public domain and therefore accessible from the IPIP webseite <a href="https://ipip.ori.org/">https://ipip.ori.org/</a>,  but there is also the norm-dataset freely available at <a href="https://osf.io/tbmh5/"> https://osf.io/tbmh5/ </a>. This means, to assess distincitiveness of the IPIP-NEO-120, one does not need this <i>auxiliary</i> calculator, but can do so oneself based on the available raw-data using the original, latent Fornell-Larcker criterion. Fortunately, all 6 facets of “openness” in the IPIP-NEO-120 are indeed distinct from each other, so one can use this instrument in the desired way. 
+<p></p>
+<p></p>
+<b>References: </b>
+<p></p>
+Costa, P. T. & McCrae, R. R. (1992). <i>Revised NEO Personality Inventory (NEO-PI-R) and NEO Five Factor Inventory. Professional Manual.</i> Odessa: Psychological Assessment Resources. 
+<p></p>
+Johnson, J. A. (2014). Measuring thirty facets of the five factor model with a 120-item public domain inventory: Development of the IPIP-NEO-120. <i>Journal of Research in Personality</i>, 51, 78-89. 
+
+</body>
+</html>
+
+
+
+<script>
+function updateVal1(val)
+{
+	var element = document.getElementById("val1");
+	if(val == 0){			element.value = "0.00";}
+	else if(val == 1){element.value = "1.00";}
+	else{							element.value = val;}
+
+	updateOutput();
+}
+
+function updateVal3(val)
+{
+	var element = document.getElementById("val3");
+	if(val == 0){			element.value = "0.00";}
+	else if(val == 1){element.value = "1.00";}
+	else{							element.value = val;}
+
+	updateOutput();
+}
+
+function updateVal5(val)
+{
+	var element = document.getElementById("val5");
+	if(val == 0){			element.value = "0.00";}
+	else if(val == 1){element.value = "1.00";}
+	else{							element.value = val;}
+
+	updateOutput();
+}
+
+function updateVal2(val)
+{
+	var element = document.getElementById("val2");
+	element.value = val;
+	updateOutput();
+}
+
+function updateVal4(val)
+{
+		var element = document.getElementById("val4");
+		element.value = val;
+		updateOutput();
+}
+
+function updateOutput()
+{
+	var form = document.getElementById("dvCalculator");
+
+	var alphx = parseFloat(form.elements["alphx"].value);
+	var kx = parseInt(form.elements["kx"].value);
+	var alphy = parseFloat(form.elements["alphy"].value);
+	var ky = parseInt(form.elements["ky"].value);
+	var rxy = parseFloat(form.elements["rxy"].value);
+
+	document.getElementById("range1").value = alphx;
+	document.getElementById("range2").value = kx;
+	document.getElementById("range3").value = alphy;
+	document.getElementById("range4").value = ky;
+	document.getElementById("range5").value = rxy;
+
+	var alphavex;
+	var sqrtalpavex;
+	var alphavey;
+	var sqrtalpavey;
+	var rxysinglecor;
+	var rxydoublecor;
+
+	alphavex = alphx/(-alphx*kx + alphx + kx);
+	alphavey = alphy/(-alphy*ky + alphy + ky);
+	sqrtalpavey =  Math.sqrt(alphavey);
+	sqrtalpavex =  Math.sqrt(alphavex);
+	rxysinglecor = rxy/(Math.sqrt(Math.min(alphx,alphy)));
+	rxydoublecor = rxy/(Math.sqrt(alphx)*Math.sqrt(alphy));
+
+	form.elements["alphavex"].value = 		alphavex.toFixed(2);
+	form.elements["sqrtalpavex"].value = 	sqrtalpavex.toFixed(2);
+	form.elements["alphavey"].value = 		alphavey.toFixed(2);
+	form.elements["sqrtalpavey"].value = 	sqrtalpavey.toFixed(2);
+	form.elements["rxysinglecor"].value = rxysinglecor.toFixed(2);
+	form.elements["rxydoublecor"].value = rxydoublecor.toFixed(2);
+
+	var elem1 = document.getElementById("FLsingleResult");
+	var elem2 = document.getElementById("FLdoubleResult");
+
+	if (Boolean((sqrtalpavex > rxysinglecor) && ( sqrtalpavey > rxysinglecor)))
+	{
+		elem1.innerHTML = "fullfilled"
+		elem1.style.backgroundColor = "green";
+	}
+	else
+	{
+		elem1.innerHTML = "not fullfilled"
+		elem1.style.backgroundColor = "red";
+	}
+
+	if (Boolean((sqrtalpavex > rxydoublecor)&&( sqrtalpavey > rxydoublecor)))
+	{
+		elem2.innerHTML = "fullfilled";
+		elem2.style.backgroundColor = "green";
+	}
+	else
+	{
+		elem2.innerHTML = "not fullfilled";
+		elem2.style.backgroundColor = "red";
+	}
+}
+</script>
